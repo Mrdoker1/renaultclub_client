@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuthStore } from "../store/authStore";
-import axios from "axios";
 import { Box, Button, Input, Heading, VStack, Text, useToast, Tabs, TabList, TabPanels, Tab, TabPanel } from "@chakra-ui/react";
 import PasswordInput from "../components/PasswordInput";
 import renaultImage from "../assets/renault.png";
@@ -13,20 +12,21 @@ const RegisterForm = ({ setError, setSuccess }: { setError: (message: string) =>
   const [loading, setLoading] = useState(false);
   const toast = useToast();
 
+  const isFormValid = form.username && form.email && form.password;
+
   const handleRegister = async () => {
     setLoading(true);
     try {
       await register(form.username, form.email, form.password);
       setSuccess("Регистрация успешна! Письмо с подтверждением отправлено на ваш email.");
-      toast({ title: "Регистрация успешна!", description: "Письмо с подтверждением отправлено на ваш email.", status: "success", duration: 5000, isClosable: true });
+      toast({ title: "Регистрация успешна!", position: 'top-right', description: "Письмо с подтверждением отправлено на ваш email.", status: "success", duration: 5000, isClosable: true });
       navigate("/auth");
     } catch (error) {
-      if (axios.isAxiosError(error) && error.response) {
-        setError(error.response.data.message);
-        toast({ title: "Ошибка регистрации!", description: error.response.data.message, status: "error", duration: 5000, isClosable: true });
+      if (error instanceof Error) {
+        setError(error.message);
+        toast({ title: "Ошибка регистрации!", position: 'top-right', description: error.message, status: "error", duration: 5000, isClosable: true });
       } else {
-        setError("Ошибка регистрации!");
-        toast({ title: "Ошибка регистрации!", description: "Ошибка регистрации!", status: "error", duration: 5000, isClosable: true });
+        setError("An unknown error occurred.");
       }
     } finally {
       setLoading(false);
@@ -39,7 +39,7 @@ const RegisterForm = ({ setError, setSuccess }: { setError: (message: string) =>
       <Input placeholder="Имя пользователя" onChange={(e) => setForm({ ...form, username: e.target.value })} />
       <Input type="email" placeholder="Email" onChange={(e) => setForm({ ...form, email: e.target.value })} />
       <PasswordInput placeholder="Пароль" onChange={(e) => setForm({ ...form, password: e.target.value })} />
-      <Button onClick={handleRegister} colorScheme="blue" isLoading={loading} width="100%">Зарегистрироваться</Button>
+      <Button onClick={handleRegister} colorScheme="yellow" isLoading={loading} width="100%" isDisabled={!isFormValid}>Зарегистрироваться</Button>
     </VStack>
   );
 };
@@ -51,18 +51,19 @@ const LoginForm = ({ setError }: { setError: (message: string) => void }) => {
   const [loading, setLoading] = useState(false);
   const toast = useToast();
 
+  const isFormValid = form.username && form.password;
+
   const handleLogin = async () => {
     setLoading(true);
     try {
       await login(form.username, form.password);
       navigate("/profile");
     } catch (error) {
-      if (axios.isAxiosError(error) && error.response) {
-        setError(error.response.data.message);
-        toast({ title: "Ошибка входа!", position: 'top-right', description: error.response.data.message, status: "error", duration: 5000, isClosable: true });
+      if (error instanceof Error) {
+        setError(error.message);
+        toast({ title: "Ошибка входа!", position: 'top-right', description: error.message, status: "error", duration: 5000, isClosable: true });
       } else {
-        setError("Ошибка входа!");
-        toast({ title: "Ошибка входа!", position: 'top-right', description: "Ошибка входа!", status: "error", duration: 5000, isClosable: true });
+        setError("An unknown error occurred.");
       }
     } finally {
       setLoading(false);
@@ -74,7 +75,7 @@ const LoginForm = ({ setError }: { setError: (message: string) => void }) => {
       <Heading as="h2" size="lg">Вход</Heading>
       <Input placeholder="Имя пользователя" onChange={(e) => setForm({ ...form, username: e.target.value })} />
       <PasswordInput placeholder="Пароль" onChange={(e) => setForm({ ...form, password: e.target.value })} />
-      <Button onClick={handleLogin} colorScheme="blue" isLoading={loading} width="100%">Войти</Button>
+      <Button onClick={handleLogin} colorScheme="yellow" isLoading={loading} width="100%" isDisabled={!isFormValid}>Войти</Button>
     </VStack>
   );
 };
@@ -95,12 +96,15 @@ const AuthPage = () => {
 
   return (
     <Box className="page-container" display="flex" alignItems="center" justifyContent="center">
-      <Box flex="1" maxWidth="50%" display={{ base: "none", md: "block" }}>
-        <img src={renaultImage} alt="Renault" style={{ width: "100%", height: "auto" }} />
+      <Box className="image-container" flex="1" maxWidth="50%" display={{ base: "none", md: "flex" }}>
+        <img src={renaultImage} alt="Renault" style={{ width: "100%", height: "auto", maxWidth:"500px" }} />
       </Box>
       <Box className="auth-container" p="8" flex="1">
         <Box flex="1" maxWidth="500px">
-          <Tabs isFitted>
+            <Box p="12" display={{ base: "flex", md: "none" }}>
+              <img src={renaultImage} alt="Renault" style={{ width: "100%", height: "auto", maxWidth:"500px" }} />
+            </Box>
+          <Tabs isFitted colorScheme='yellow'>
             <TabList mb="1em">
               <Tab>Вход</Tab>
               <Tab>Регистрация</Tab>

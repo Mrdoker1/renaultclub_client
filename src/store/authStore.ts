@@ -23,12 +23,21 @@ export const useAuthStore = create<AuthState>((set) => ({
   isAuthenticated: !!localStorage.getItem("token"),
 
   login: async (username, password) => {
-    const res = await axios.post("http://localhost:3000/auth/login", { username, password });
-    const token = res.data.token;
-    localStorage.setItem("token", token);
-    set({ token, isAuthenticated: true });
+    try {
+      const res = await axios.post("http://localhost:3000/auth/login", { username, password });
+      const token = res.data.token;
+      localStorage.setItem("token", token);
+      set({ token, isAuthenticated: true });
 
-    await useAuthStore.getState().fetchUser(); // Загружаем данные о пользователе после входа
+      await useAuthStore.getState().fetchUser(); // Загружаем данные о пользователе после входа
+    } catch (error) {
+      if (axios.isAxiosError(error) && error.response) {
+        console.log("Ошибка с сервера:", error.response);
+        throw new Error((error.response?.data?.message as string) || "Ошибка входа");
+      } else {
+        throw new Error("Сервер не отвечает");
+      }
+    }
   },
 
   register: async (username, email, password) => {
@@ -36,9 +45,10 @@ export const useAuthStore = create<AuthState>((set) => ({
       await axios.post("http://localhost:3000/auth/register", { username, email, password, role: "user" });
     } catch (error) {
       if (axios.isAxiosError(error) && error.response) {
+        console.log("Ошибка с сервера:", error.response.data.message);
         throw new Error(error.response.data.message || "Ошибка регистрации");
       } else {
-        throw new Error("Ошибка регистрации");
+        throw new Error("Сервер не отвечает");
       }
     }
   },
@@ -58,7 +68,11 @@ export const useAuthStore = create<AuthState>((set) => ({
       });
       set({ user: res.data });
     } catch (error) {
-      console.error("Ошибка загрузки пользователя:", error);
+      if (axios.isAxiosError(error) && error.response) {
+        console.error("Ошибка загрузки пользователя:", (error.response?.data?.message as string) || "Unknown error");
+      } else {
+        console.error("Сервер не отвечает");
+      }
       set({ user: null, isAuthenticated: false });
     }
   },

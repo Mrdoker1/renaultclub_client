@@ -10,6 +10,14 @@ html, body, #root {
   font-family: Arial, sans-serif;
 }
 
+button {
+  border-radius: 0 !important;
+}
+
+input {
+  border-radius: 0 !important;
+}
+
 .page-container {
   display: flex;
   height: 100%;
@@ -22,4 +30,14 @@ html, body, #root {
   align-content: center;
   background-color: black;
   color:white
+}
+
+.image-container {
+  background: url('https://cs14.pikabu.ru/post_img/big/2021/11/16/6/163705020917338492.jpg') no-repeat center center;
+  background-size: cover;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }

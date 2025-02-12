@@ -10,20 +10,20 @@ const RegisterPage = () => {
   const [loading, setLoading] = useState(false);
   const toast = useToast();
 
+  const isFormValid = form.username && form.email && form.password;
+
   const handleRegister = async () => {
     setLoading(true);
     try {
       await register(form.username, form.email, form.password);
-      toast({ title: "Регистрация успешна!", status: "success", duration: 5000, isClosable: true });
+      toast({ title: "Регистрация успешна!", position: 'top-right', status: "success", duration: 5000, isClosable: true });
       navigate("/auth");
     } catch (error) {
-      toast({
-        title: "Ошибка регистрации!",
-        description: error instanceof Error ? error.message : "Unknown error",
-        status: "error",
-        duration: 5000,
-        isClosable: true,
-      });
+      if (error instanceof Error) {
+        toast({ title: "Ошибка регистрации!", position: 'top-right', description: error.message, status: "error", duration: 5000, isClosable: true });
+      } else {
+        toast({ title: "Ошибка регистрации!", position: 'top-right', description: "Сервер не отвечает", status: "error", duration: 5000, isClosable: true });
+      }
     } finally {
       setLoading(false);
     }
@@ -36,7 +36,7 @@ const RegisterPage = () => {
         <Input placeholder="Имя пользователя" onChange={(e) => setForm({ ...form, username: e.target.value })} />
         <Input type="email" placeholder="Email" onChange={(e) => setForm({ ...form, email: e.target.value })} />
         <Input type="password" placeholder="Пароль" onChange={(e) => setForm({ ...form, password: e.target.value })} />
-        <Button onClick={handleRegister} colorScheme="blue" isLoading={loading}>Зарегистрироваться</Button>
+        <Button onClick={handleRegister} colorScheme="yellow" isLoading={loading} isDisabled={!isFormValid}>Зарегистрироваться</Button>
       </VStack>
     </Box>
   );

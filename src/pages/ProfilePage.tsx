@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { useAuthStore } from "../store/authStore";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
 import { Box, Button, Heading, Text, VStack, useToast } from "@chakra-ui/react";
 
 const ProfilePage = () => {
@@ -12,13 +11,13 @@ const ProfilePage = () => {
 
   useEffect(() => {
     if (!user && isAuthenticated) {
-      fetchUser().catch((err) => {
-        if (axios.isAxiosError(err) && err.response) {
-          setError(err.response.data.message);
-          toast({ title: "Ошибка", description: err.response.data.message, status: "error", duration: 5000, isClosable: true });
+      fetchUser().catch((error) => {
+        if (error instanceof Error) {
+          setError(error.message);
+          toast({ title: "Ошибка", position: 'top-right', description: error.message, status: "error", duration: 5000, isClosable: true });
         } else {
-          setError("Ошибка загрузки данных пользователя!");
-          toast({ title: "Ошибка", description: "Ошибка загрузки данных пользователя!", status: "error", duration: 5000, isClosable: true });
+          setError("Сервер не отвечает");
+          toast({ title: "Ошибка", position: 'top-right', description: "Ошибка загрузки данных пользователя!", status: "error", duration: 5000, isClosable: true });
         }
       });
     }
@@ -42,7 +41,7 @@ const ProfilePage = () => {
         ) : (
           <Text>Загрузка данных...</Text>
         )}
-        <Button onClick={() => { logout(); navigate("/auth"); }} colorScheme="blue">
+        <Button style={{ borderRadius:'0' }} onClick={() => { logout(); navigate("/auth"); }} colorScheme="yellow">
           Выйти
         </Button>
       </VStack>
