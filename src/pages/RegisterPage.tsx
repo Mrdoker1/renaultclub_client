@@ -12,7 +12,7 @@ const RegisterPage = () => {
       await register(form.username, form.email, form.password);
       alert("Регистрация успешна!");
       navigate("/login");
-    } catch (error) {
+    } catch {
       alert("Ошибка регистрации!");
     }
   };

@@ -1,16 +1,14 @@
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
-import LoginPage from "./pages/LoginPage";
-import RegisterPage from "./pages/RegisterPage";
+import AuthPage from "./pages/AuthPage";
 import ProfilePage from "./pages/ProfilePage";
 
 const AppRoutes = () => {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/login" element={<LoginPage />} />
-        <Route path="/register" element={<RegisterPage />} />
+        <Route path="/auth" element={<AuthPage />} />
         <Route path="/profile" element={<ProfilePage />} />
-        <Route path="*" element={<Navigate to="/login" />} />
+        <Route path="*" element={<Navigate to="/auth" />} />
       </Routes>
     </BrowserRouter>
   );

@@ -1,14 +1,22 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useAuthStore } from "../store/authStore";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 const ProfilePage = () => {
   const { logout, isAuthenticated, user, fetchUser } = useAuthStore();
   const navigate = useNavigate();
+  const [error, setError] = useState("");
 
   useEffect(() => {
     if (!user && isAuthenticated) {
-      fetchUser();
+      fetchUser().catch((err) => {
+        if (axios.isAxiosError(err) && err.response) {
+          setError(err.response.data.message);
+        } else {
+          setError("Ошибка загрузки данных пользователя!");
+        }
+      });
     }
   }, [user, isAuthenticated, fetchUser]);
 
@@ -20,6 +28,7 @@ const ProfilePage = () => {
   return (
     <div className="page-container">
       <h2>Профиль</h2>
+      {error && <p className="error-message">{error}</p>}
       {user ? (
         <>
           <p><strong>Имя пользователя:</strong> {user.username}</p>
