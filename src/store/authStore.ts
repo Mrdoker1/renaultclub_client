@@ -32,7 +32,15 @@ export const useAuthStore = create<AuthState>((set) => ({
   },
 
   register: async (username, email, password) => {
-    await axios.post("http://localhost:3000/auth/register", { username, email, password, role: "user" });
+    try {
+      await axios.post("http://localhost:3000/auth/register", { username, email, password, role: "user" });
+    } catch (error) {
+      if (axios.isAxiosError(error) && error.response) {
+        throw new Error(error.response.data.message || "Ошибка регистрации");
+      } else {
+        throw new Error("Ошибка регистрации");
+      }
+    }
   },
 
   logout: () => {

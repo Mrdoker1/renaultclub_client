@@ -2,34 +2,45 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuthStore } from "../store/authStore";
 import axios from "axios";
+import { Box, Button, Input, Heading, VStack, Text, useToast, Tabs, TabList, TabPanels, Tab, TabPanel } from "@chakra-ui/react";
+import PasswordInput from "../components/PasswordInput";
+import renaultImage from "../assets/renault.png";
 
 const RegisterForm = ({ setError, setSuccess }: { setError: (message: string) => void, setSuccess: (message: string) => void }) => {
   const { register } = useAuthStore();
   const navigate = useNavigate();
   const [form, setForm] = useState({ username: "", email: "", password: "" });
+  const [loading, setLoading] = useState(false);
+  const toast = useToast();
 
   const handleRegister = async () => {
+    setLoading(true);
     try {
       await register(form.username, form.email, form.password);
       setSuccess("Регистрация успешна! Письмо с подтверждением отправлено на ваш email.");
-      navigate("/login");
+      toast({ title: "Регистрация успешна!", description: "Письмо с подтверждением отправлено на ваш email.", status: "success", duration: 5000, isClosable: true });
+      navigate("/auth");
     } catch (error) {
       if (axios.isAxiosError(error) && error.response) {
         setError(error.response.data.message);
+        toast({ title: "Ошибка регистрации!", description: error.response.data.message, status: "error", duration: 5000, isClosable: true });
       } else {
         setError("Ошибка регистрации!");
+        toast({ title: "Ошибка регистрации!", description: "Ошибка регистрации!", status: "error", duration: 5000, isClosable: true });
       }
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
-    <div>
-      <h2>Регистрация</h2>
-      <input type="text" placeholder="Username" onChange={(e) => setForm({ ...form, username: e.target.value })} />
-      <input type="email" placeholder="Email" onChange={(e) => setForm({ ...form, email: e.target.value })} />
-      <input type="password" placeholder="Пароль" onChange={(e) => setForm({ ...form, password: e.target.value })} />
-      <button onClick={handleRegister}>Зарегистрироваться</button>
-    </div>
+    <VStack gap={4}>
+      <Heading as="h2" size="lg">Регистрация</Heading>
+      <Input placeholder="Имя пользователя" onChange={(e) => setForm({ ...form, username: e.target.value })} />
+      <Input type="email" placeholder="Email" onChange={(e) => setForm({ ...form, email: e.target.value })} />
+      <PasswordInput placeholder="Пароль" onChange={(e) => setForm({ ...form, password: e.target.value })} />
+      <Button onClick={handleRegister} colorScheme="blue" isLoading={loading} width="100%">Зарегистрироваться</Button>
+    </VStack>
   );
 };
 
@@ -37,44 +48,77 @@ const LoginForm = ({ setError }: { setError: (message: string) => void }) => {
   const { login } = useAuthStore();
   const navigate = useNavigate();
   const [form, setForm] = useState({ username: "", password: "" });
+  const [loading, setLoading] = useState(false);
+  const toast = useToast();
 
   const handleLogin = async () => {
+    setLoading(true);
     try {
       await login(form.username, form.password);
       navigate("/profile");
     } catch (error) {
       if (axios.isAxiosError(error) && error.response) {
         setError(error.response.data.message);
+        toast({ title: "Ошибка входа!", position: 'top-right', description: error.response.data.message, status: "error", duration: 5000, isClosable: true });
       } else {
         setError("Ошибка входа!");
+        toast({ title: "Ошибка входа!", position: 'top-right', description: "Ошибка входа!", status: "error", duration: 5000, isClosable: true });
       }
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
-    <div>
-      <h2>Вход</h2>
-      <input type="text" placeholder="Username" onChange={(e) => setForm({ ...form, username: e.target.value })} />
-      <input type="password" placeholder="Пароль" onChange={(e) => setForm({ ...form, password: e.target.value })} />
-      <button onClick={handleLogin}>Войти</button>
-    </div>
+    <VStack gap={4}>
+      <Heading as="h2" size="lg">Вход</Heading>
+      <Input placeholder="Имя пользователя" onChange={(e) => setForm({ ...form, username: e.target.value })} />
+      <PasswordInput placeholder="Пароль" onChange={(e) => setForm({ ...form, password: e.target.value })} />
+      <Button onClick={handleLogin} colorScheme="blue" isLoading={loading} width="100%">Войти</Button>
+    </VStack>
   );
 };
 
 const AuthPage = () => {
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
-  const [isLogin, setIsLogin] = useState(true);
+
+  const handleSetError = (message: string) => {
+    setError(message);
+    setSuccess("");
+  };
+
+  const handleSetSuccess = (message: string) => {
+    setSuccess(message);
+    setError("");
+  };
 
   return (
-    <div className="page-container">
-      {isLogin ? <LoginForm setError={setError} /> : <RegisterForm setError={setError} setSuccess={setSuccess} />}
-      {error && <p className="error-message">{error}</p>}
-      {success && <p className="success-message">{success}</p>}
-      <button onClick={() => setIsLogin(!isLogin)}>
-        {isLogin ? "Перейти к регистрации" : "Перейти к входу"}
-      </button>
-    </div>
+    <Box className="page-container" display="flex" alignItems="center" justifyContent="center">
+      <Box flex="1" maxWidth="50%" display={{ base: "none", md: "block" }}>
+        <img src={renaultImage} alt="Renault" style={{ width: "100%", height: "auto" }} />
+      </Box>
+      <Box className="auth-container" p="8" flex="1">
+        <Box flex="1" maxWidth="500px">
+          <Tabs isFitted>
+            <TabList mb="1em">
+              <Tab>Вход</Tab>
+              <Tab>Регистрация</Tab>
+            </TabList>
+            <TabPanels>
+              <TabPanel>
+                <LoginForm setError={handleSetError} />
+              </TabPanel>
+              <TabPanel>
+                <RegisterForm setError={handleSetError} setSuccess={handleSetSuccess} />
+              </TabPanel>
+            </TabPanels>
+          </Tabs>
+          {error && <Text color="red.500">{error}</Text>}
+          {success && <Text color="green.500">{success}</Text>}
+        </Box>
+      </Box>
+    </Box>
   );
 };
 
