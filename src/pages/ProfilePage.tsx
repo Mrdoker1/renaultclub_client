@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
 import { useAuthStore } from "../store/authStore";
 import { useNavigate } from "react-router-dom";
-import { Box, Button, Heading, Text, VStack, useToast } from "@chakra-ui/react";
+import { Box, Text, VStack, useToast } from "@chakra-ui/react";
 
 const ProfilePage = () => {
-  const { logout, isAuthenticated, user, fetchUser } = useAuthStore();
+  const { isAuthenticated, user, fetchUser } = useAuthStore();
   const navigate = useNavigate();
   const [error, setError] = useState("");
   const toast = useToast();
@@ -29,21 +29,23 @@ const ProfilePage = () => {
   }
 
   return (
-    <Box className="page-container" p={4}>
-      <VStack gap={4}>
-        <Heading as="h2" size="lg">Профиль</Heading>
+    <Box display="flex" height="100%" width="100%" p={0}>
+      <VStack spacing={4} align="stretch">
         {error && <Text color="red.500">{error}</Text>}
         {user ? (
           <>
-            <Text><strong>Имя пользователя:</strong> {user.username}</Text>
-            <Text><strong>Email:</strong> {user.email}</Text>
+            <Box>
+              <Text><strong>Имя пользователя:</strong></Text>
+              <Text>{user.username}</Text>
+            </Box>
+            <Box>
+              <Text><strong>Email:</strong></Text>
+              <Text>{user.email}</Text>
+            </Box>
           </>
         ) : (
           <Text>Загрузка данных...</Text>
         )}
-        <Button style={{ borderRadius:'0' }} onClick={() => { logout(); navigate("/auth"); }} colorScheme="yellow">
-          Выйти
-        </Button>
       </VStack>
     </Box>
   );

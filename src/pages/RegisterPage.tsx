@@ -30,8 +30,8 @@ const RegisterPage = () => {
   };
 
   return (
-    <Box className="page-container" p={4}>
-      <VStack gap={4}>
+    <Box display="flex" height="100%" width="100%" p={0}>
+      <VStack spacing={4} align="stretch">
         <Heading as="h2" size="lg">Регистрация</Heading>
         <Input placeholder="Имя пользователя" onChange={(e) => setForm({ ...form, username: e.target.value })} />
         <Input type="email" placeholder="Email" onChange={(e) => setForm({ ...form, email: e.target.value })} />

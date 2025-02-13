@@ -57,7 +57,7 @@ const LoginForm = ({ setError }: { setError: (message: string) => void }) => {
     setLoading(true);
     try {
       await login(form.username, form.password);
-      navigate("/profile");
+      navigate("/account");
     } catch (error) {
       if (error instanceof Error) {
         setError(error.message);
@@ -95,15 +95,15 @@ const AuthPage = () => {
   };
 
   return (
-    <Box className="page-container" display="flex" alignItems="center" justifyContent="center">
-      <Box className="image-container" flex="1" display={{ base: "none", md: "flex" }}>
+    <Box display="flex" height="100%" width="100%" justifyContent="center" alignItems="center" bg="black" color="white">
+      <Box flex="1" display={{ base: "none", md: "flex" }} bgImage="url('https://i.postimg.cc/S4wzDjYm/image-16.jpg')" bgSize="cover" bgPosition="center" width="100%" height="100%" alignItems="center" justifyContent="center">
         <img src={renaultImage} alt="Renault" style={{ width: "100%", height: "auto", maxWidth:"500px" }} />
       </Box>
-      <Box className="auth-container" flex="1" p="8">
-        <Box flex="1" maxWidth="500px">
-            <Box p="12" display={{ base: "flex", md: "none" }}>
-              <img src={renaultImage} alt="Renault" style={{ width: "100%", height: "auto", maxWidth:"500px" }} />
-            </Box>
+      <Box p={8} flex="1">
+        <Box maxWidth="500px">
+          <Box p={12} display={{ base: "flex", md: "none" }}>
+            <img src={renaultImage} alt="Renault" style={{ width: "100%", height: "auto", maxWidth:"500px" }} />
+          </Box>
           <Tabs isFitted colorScheme='yellow'>
             <TabList mb="1em">
               <Tab>Вход</Tab>

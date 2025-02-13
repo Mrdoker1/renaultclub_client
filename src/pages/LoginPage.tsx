@@ -16,7 +16,7 @@ const LoginPage = () => {
     setLoading(true);
     try {
       await login(form.username, form.password);
-      navigate("/profile");
+      navigate("/account");
     } catch (error) {
       if (error instanceof Error) {
         toast({ title: "Ошибка входа!", position: 'top-right', description: error.message, status: "error", duration: 5000, isClosable: true });
@@ -27,12 +27,12 @@ const LoginPage = () => {
   };
 
   return (
-    <Box className="page-container" p={4}>
-      <VStack gap={4}>
+    <Box display="flex" height="100%" width="100%" p={0}>
+      <VStack spacing={4} align="stretch">
         <Heading as="h2" size="lg">Вход</Heading>
         <Input placeholder="Имя пользователя" onChange={(e) => setForm({ ...form, username: e.target.value })} />
         <Input type="password" placeholder="Пароль" onChange={(e) => setForm({ ...form, password: e.target.value })} />
-        <Button onClick={handleLogin} style={{ borderRadius:'0' }} colorScheme="yellow" isLoading={loading} isDisabled={!isFormValid}>Войти</Button>
+        <Button onClick={handleLogin} borderRadius={0} colorScheme="yellow" isLoading={loading} isDisabled={!isFormValid}>Войти</Button>
       </VStack>
     </Box>
   );
