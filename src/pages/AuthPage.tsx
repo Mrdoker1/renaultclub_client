@@ -96,10 +96,10 @@ const AuthPage = () => {
 
   return (
     <Box className="page-container" display="flex" alignItems="center" justifyContent="center">
-      <Box className="image-container" flex="1" maxWidth="50%" display={{ base: "none", md: "flex" }}>
+      <Box className="image-container" flex="2" display={{ base: "none", md: "flex" }}>
         <img src={renaultImage} alt="Renault" style={{ width: "100%", height: "auto", maxWidth:"500px" }} />
       </Box>
-      <Box className="auth-container" p="8" flex="1">
+      <Box className="auth-container" flex="1" p="8">
         <Box flex="1" maxWidth="500px">
             <Box p="12" display={{ base: "flex", md: "none" }}>
               <img src={renaultImage} alt="Renault" style={{ width: "100%", height: "auto", maxWidth:"500px" }} />
