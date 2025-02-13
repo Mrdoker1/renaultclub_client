@@ -100,7 +100,7 @@ const AuthPage = () => {
         <img src={renaultImage} alt="Renault" style={{ width: "100%", height: "auto", maxWidth:"500px" }} />
       </Box>
       <Box p={8} flex="1">
-        <Box maxWidth="500px">
+        <Box maxWidth="500px" mx={"auto"}>
           <Box p={12} display={{ base: "flex", md: "none" }}>
             <img src={renaultImage} alt="Renault" style={{ width: "100%", height: "auto", maxWidth:"500px" }} />
           </Box>
