@@ -41,7 +41,7 @@ const AccountPage = () => {
     <Box display="flex" height="100%" width="100%" flexDirection="column" p={0}>
       <Box 
         p={isMobile ? 4 : 16} 
-        height="140px" 
+        height={isMobile ? 20 : 30} 
         width="100%" 
         bgImage="url('https://i.postimg.cc/dtWcSvdS/image-31.png')" 
         bgSize="cover" 
@@ -58,7 +58,7 @@ const AccountPage = () => {
         paddingLeft={isMobile ? 4 : 16} 
         paddingRight={isMobile ? 4 : 16} 
         colorScheme="yellow" 
-        mt={8}
+        mt={isMobile ? 6 : 12} 
         orientation={isMobile ? "vertical" : "horizontal"}
       >
         <TabList marginRight={isMobile ? 4 : 0}>
