@@ -1,10 +1,14 @@
 import { useEffect, useState } from "react";
 import { useAuthStore } from "../store/authStore";
+import { useMockAuthStore } from "../store/mockAuthStore";
 import { useNavigate } from "react-router-dom";
 import { Box, Text, VStack, useToast } from "@chakra-ui/react";
 
 const ProfilePage = () => {
-  const { isAuthenticated, user, fetchUser } = useAuthStore();
+  const useMockData = import.meta.env.VITE_USE_MOCK_DATA === 'true';
+  const authStore = useAuthStore();
+  const mockAuthStore = useMockAuthStore();
+  const { isAuthenticated, user, fetchUser } = useMockData ? mockAuthStore : authStore;
   const navigate = useNavigate();
   const [error, setError] = useState("");
   const toast = useToast();
@@ -23,8 +27,13 @@ const ProfilePage = () => {
     }
   }, [user, isAuthenticated, fetchUser, toast]);
 
+  useEffect(() => {
+    if (!isAuthenticated) {
+      navigate("/auth");
+    }
+  }, [isAuthenticated, navigate]);
+
   if (!isAuthenticated) {
-    navigate("/auth");
     return null;
   }
 

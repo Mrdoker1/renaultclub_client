@@ -1,10 +1,14 @@
 import { useState } from "react";
 import { useAuthStore } from "../store/authStore";
+import { useMockAuthStore } from "../store/mockAuthStore";
 import { useNavigate } from "react-router-dom";
 import { Box, Button, Input, Heading, VStack, useToast } from "@chakra-ui/react";
 
 const LoginPage = () => {
-  const { login } = useAuthStore();
+  const useMockData = import.meta.env.VITE_USE_MOCK_DATA === 'true';
+  const authStore = useAuthStore();
+  const mockAuthStore = useMockAuthStore();
+  const { login } = useMockData ? mockAuthStore : authStore;
   const navigate = useNavigate();
   const [form, setForm] = useState({ username: "", password: "" });
   const [loading, setLoading] = useState(false);

@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuthStore } from "../store/authStore";
+import { useMockAuthStore } from "../store/mockAuthStore";
 import { Box, Button, Input, Heading, VStack, Text, useToast, Tabs, TabList, TabPanels, Tab, TabPanel } from "@chakra-ui/react";
 import PasswordInput from "../components/PasswordInput";
 import renaultImage from "../assets/renault.png";
@@ -45,7 +46,10 @@ const RegisterForm = ({ setError, setSuccess }: { setError: (message: string) =>
 };
 
 const LoginForm = ({ setError }: { setError: (message: string) => void }) => {
-  const { login } = useAuthStore();
+  const useMockData = import.meta.env.VITE_USE_MOCK_DATA === 'true';
+  const authStore = useAuthStore();
+  const mockAuthStore = useMockAuthStore();
+  const { login } = useMockData ? mockAuthStore : authStore;
   const navigate = useNavigate();
   const [form, setForm] = useState({ username: "", password: "" });
   const [loading, setLoading] = useState(false);

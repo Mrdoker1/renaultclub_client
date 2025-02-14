@@ -3,6 +3,7 @@ import AuthPage from "./pages/AuthPage";
 import AccountPage from "./pages/AccountPage";
 
 const App = () => {
+  console.log(process.env.NODE_ENV)
   return (
     <Router>
       <Routes>
