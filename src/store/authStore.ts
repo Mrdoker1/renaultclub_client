@@ -24,7 +24,7 @@ export const useAuthStore = create<AuthState>((set) => ({
 
   login: async (username, password) => {
     try {
-      const res = await axios.post("http://localhost:3000/auth/login", { username, password });
+      const res = await axios.post(`http://${process.env.SERVER_URL}/auth/login`, { username, password });
       const token = res.data.token;
       localStorage.setItem("token", token);
       set({ token, isAuthenticated: true });
@@ -42,7 +42,7 @@ export const useAuthStore = create<AuthState>((set) => ({
 
   register: async (username, email, password) => {
     try {
-      await axios.post("http://localhost:3000/auth/register", { username, email, password, role: "user" });
+      await axios.post(`http://${process.env.SERVER_URL}/auth/register`, { username, email, password, role: "user" });
     } catch (error) {
       if (axios.isAxiosError(error) && error.response) {
         console.log("Ошибка с сервера:", error.response.data.message);
@@ -63,7 +63,7 @@ export const useAuthStore = create<AuthState>((set) => ({
     if (!token) return;
 
     try {
-      const res = await axios.get("http://localhost:3000/auth/me", {
+      const res = await axios.get(`http://${process.env.SERVER_URL}/auth/me`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       set({ user: res.data });
