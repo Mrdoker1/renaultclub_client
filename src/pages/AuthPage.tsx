@@ -108,7 +108,7 @@ const AuthPage = () => {
           <Box p={12} display={{ base: "flex", md: "none" }}>
             <img src={renaultImage} alt="Renault" style={{ width: "100%", height: "auto", maxWidth:"500px" }} />
           </Box>
-          <Tabs isFitted colorScheme='yellow'>
+          <Tabs background = "#111111" borderRadius = "20px" padding = "24px" isFitted colorScheme='yellow'>
             <TabList mb="1em">
               <Tab>Вход</Tab>
               <Tab>Регистрация</Tab>
